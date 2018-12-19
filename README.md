@@ -69,117 +69,126 @@ let's look at `fb` the name of the folder that's in a circle and yes it's the fi
 
 `-p` stands for prettier printing and the result should return the string `git-deep-dive`. Now if we were to remove `-p` git will return the type of data and in that case `git cat-file fbef70402e67eed3ceca1640ab0a9a33d28a8c81` it will return a blob. 
 
-2. We are going to give our repo a name and initialize it with a readme ![alt text]
 
-We will be creating a new github repo to do so click on [github](https://github.com/) 
+##### step 6 (commit):
 
-*Note:* I am assuming that you already have created a github account and you're logged in and that you have git installed on your command prompt
-
-1. We are going to first create a repo (for a sake of this demo I am keeping it simple, so I went with an open project - you have the ability to restrict it to your organization only by choosing private)
-![alt text](https://res.cloudinary.com/dcqrxsgq8/image/upload/v1543944779/github-example/github1.png)
-2. We are going to give our repo a name and initialize it with a readme ![alt text](https://res.cloudinary.com/dcqrxsgq8/image/upload/v1543944801/github-example/github2.png)
-3. In this step we are going to invite members of our team to join and collaborate![alt text](https://res.cloudinary.com/dcqrxsgq8/image/upload/v1543944820/github-example/github-settings.png) ![alt text](https://res.cloudinary.com/dcqrxsgq8/image/upload/v1543944843/github-example/github-s-1.png) ![alt text](https://res.cloudinary.com/dcqrxsgq8/image/upload/v1543944872/github-example/github-s-2.png) ![alt text](https://res.cloudinary.com/dcqrxsgq8/image/upload/v1543944872/github-example/github-s-2.png)  
-Before diving in and start using git commands let's see how we can protect people from pushing to master branch (side note: Most of the time master host production code)
-
-4. We are going to create a rule that would prevent members of the organization from pushing code directly to the master branch  
- ![alt text](https://res.cloudinary.com/dcqrxsgq8/image/upload/v1543944909/github-example/github-s-4.png)  ![alt text](https://res.cloudinary.com/dcqrxsgq8/image/upload/v1543944927/github-example/github-s-5.png) ![alt text](https://res.cloudinary.com/dcqrxsgq8/image/upload/v1543944942/github-example/github-s-6.png)
- 
- ### Congrats we finished setting up our project! 
- 
- ## Now let's start using git
-  
-  First let's open the terminal and navigate to the directory where you want to keep you project for me it's going to be `~/Desktop/dev`  
-  ```shell
-	cd ~/Desktop/dev
-  ```
-  
-  we are going to clone the repo in our local machine and for the we would need the link to our github repo ![alt text](https://res.cloudinary.com/dcqrxsgq8/image/upload/v1543949510/github-example/git-clone.png)
-Now that we have the link copied let's go back to the terminal and run the following command
-  ```shell
-git clone <github-repo-url>
-```
-Once you are done cloning the repo go inside our project directory
+let's run ls which should return `README.md` and if we were to run cat README.md we should see the text we pasted into it earlier 
 
 ```
-ls
-// => github-example
-cd github-example
+# Welcome to github deep dive 
+
+This repo is subject to code conduct please read the rules if you want to contribute as this could results a ban from the community. We welcome contributors help to maintain and keep the content up to date as well as sharing the best practices.
+
 ```
-Since it is a good practice not to push your code to master, we will be creating what we call a feature branch (to keep our development code separated from the production one). To do so we are going to use `git branch` to see what our current head (for us it should return master since we created a new project)
+let's our `README.md` to our staging by running the `git add README.md` command. Now we can run the `git status` and it should return green file and it should say `Change to be committed: new file README.md`. Let's commit our README file `git commit -m 'Initialize my project with a readme'`.
+
+Let's go and open up our objects folder inside .git once there we will find the first two number of our commit as our folder name for me it looks something like this: 
+
+![alt text](https://res.cloudinary.com/dcqrxsgq8/image/upload/v1545189580/git-deep-dive/git-2.png)
+
+By now we are used to run `git cat-file -p` to see the content of the commit, so let's actually do that: 
+`git cat-file -p 2a70470`
+
+##### Important side note:
+
+Please make sure you check for your generate SHA1 for the step above.
+
+
+And long and behold there is our first commit 
+
 ```
-git branch 
-// => master
-  ```
-Create a branch using the following naming convention in the terminal.
+$ git cat-file -p 2a70470
+tree 76e0c483d083b6ac42a126800d6200385a24fe8c
+author sid-ah <sidah_10@hotmail.com> 1545182970 -0500
+committer sid-ah <sidah_10@hotmail.com> 1545182970 -0500
 
-  ```shell
-  $ git checkout -b "<feature-branch>"
-  // => The convention is to name your branch after the feature you're currently working on 
-  $ git branch
-  // => should return <fature-branch>
-  ```
+initialize project with a README.md
+```
 
-Let's open the readme file with your favorite text editor I will be using vim from the command line, but feel free to use editor of your choice
+### So what's a commit? 
+
+A commit is a simple short piece of text that's generate by git and stores it content in a blob.
+
+##### step 7 (Branching):
+
+Let's go back to our project, we have created in branches yet - but as we saw earlier initializing a project with `git init` creates automatically a branch called `master`. Let's see where git stores our local branches, so let's take a look at `.git/`. And this time around let's open up `refs/` folder for a change, once there let's open the sub directory called heads. SURPRISE! Our `master` branch was hiding there this whole time :).  And we were to print the content of `master` we will get our commit
+```
+SIMERZOU@MININT-5FJR9QC MINGW64 ~/Desktop/dev/git-deep-dive (master)
+$ cat .git/refs/heads/master
+2a7047016e39300305032a30bf77a4ff89b2fd5f
+```
+
+### So what's a branch? 
+
+A branch is a point of reference that's direct us to one or more commits. 
+
+Once that's done let's add a file name music.txt `touch music.txt` and that's done let's add some titles to it you could open with your favorite text editor I am using code `code music.txt` copy and paste the content below: 
+```
+1-Tasha Blanka - Get down 22
+2-Bach 
+3-Gaada diwan
+```
+let's add and commit. we know now how to do it `git add music.txt && git commit -m 'Add music.txt'`.
+
+##### step 8 (Merging):
+
+- Let's create a feature branch and call it feature/sidi-ringtones `git branch feature/sidi-ringtones`. let's open the `music.txt` file with our favorite text editor and change `Bach` to `MJ`. Let's just say that Sidi isn't a big fun of classical music. Now, we can add and commit our changes `git add music.txt && git commit -m 'Modify music to include MJ and remove Bach'`.
+- Switch back to master branch by moving the HEAD `git checkout master` and then let's merge the changes `git merge feature/sidi-ringtones`
 
 
-  ```shell
-  $ vim README.md 
-  ```
-press on a letter `i` in the keyboard to insert (add/edit or delete) a line and you can add something of your choice. Once you're done press escape and enter `wq` (for write and quit) 
-  
-When you work in production env you may make changes to different files and it's hard to keep track that's when git comes in handy. Let's how we it's done:
+### So what's a merge?
 
- ```shell
-  $ git status
- 
-// git status => returns all the files that where changed, deleted or added 
-// And the message should say Changes not staged for commit: README.md
-  ```
-  
-  In our case it's going to return `You've modify README.md file please commit your changes`. So now we need to add it to git control:
+A merge is simply combining lines of (code, files. txt ...etc) together. 
 
- ```shell
-  $ git add README.md //(or the name of the file that was modified)
-  ```
-  Now let's check the status again: 
-   ```shell
-  $ git status
- // =>  Changes to be committed: README.md
-  ```
-  At this point we just need to commit and push our branch to our github repo: 
+##### step 8 (Tags):
 
-   ```shell
-  $ git commit -m "Add github links to readme.md file" // -m stands for message 
- // =>  Changes to be committed: README.md 
-  ```
-  Commit messages should start with a verb, use present tense, and describe the work you have done. 
-  
- ## Final step
- 
- Our final step is to push our current branch to github and open a pull request tagging the project owner to review your changes:
- 
- ```shell
-  $ git push origin feature-branch 
-  
-  // => when it's done successfully you should see 
-  // Writing objects: 100% (8/8), 1.03 KiB | 350.00 KiB/s, done.
-  // Total 8 (delta 6), reused 0 (delta 0)
-  // remote: Resolving deltas: 100% (6/6), completed with 6 local objects.
-  // To https://github.com/bon-heur/github-example.git
-  // 2308295.80308294..120c778d1  branch -> feature-branch
-  ```
-  
-  - Let's go back to our github repo and open our first pull request: 
-  
-  step 1: 
-  ![alt text](https://res.cloudinary.com/dcqrxsgq8/image/upload/v1543960080/github-example/pull1.png)
-  
-  step 2:
-  ![alt text](https://res.cloudinary.com/dcqrxsgq8/image/upload/v1543960080/github-example/pull2.png)
- 
-  step 3:
-   ![alt text](https://res.cloudinary.com/dcqrxsgq8/image/upload/v1543960080/github-example/pull3.png) 
-  
-  
-  Congrats ! Now you have first git workflow. Below are some good links for best practices with git. 
-  
+- Annotated  tags:
+	They are called annotated tag because they come with a message `git tag -a mytag -m "I love soccer!"` you can try that command on your git project.
+
+
+Now if we run `git tag` we will get back `mytag` and if we were to `cat-file` the name of my tag like so `git cat-file -p mytag` We will get back our message `I love soccer!`. 
+
+### So what's a tag?
+
+It's a label attach to an object that points to a commit. 
+
+
+##### step 9 (Remote):
+
+
+In this step you have a free choice of using what you want to use as your remote repo either (github, bitbucket, or Azure DevOps). Once you choose please create a new repo and  please make sure you don't intialize it with a readme. Once that's done let's Add the remote to our local repo and to do that you can run the command `git remote add origin <remote-url>`. So if we were to open config file inside `.git` folder we should few things:
+
+- remote="origin"
+- url=our-remote-repo-url
+- fetch=our-remote-repos-url
+
+With this file config in place git will know which repo or repos we want to sync with. 
+
+
+### So what's a remote: 
+
+Remote is a way for git to know where to pull and push code from.
+
+##### step 10 (Push):
+
+This is the last step before we are done. To push our changes to our remote repo we can use `git push origin -u master` to push our master branch. `-u` stands for upstream and it's only needed the first time we push to the git remote repo every other time we will be just using `git push origin <name-of-the-branch>`
+
+### So what's a push: 
+
+Push is simply a way to sync our remote repo with what's on our local repo. 
+
+
+
+### Congrats! You have made it!
+
+
+Although we are done, I encourage to take a look at the resources below:
+
+https://git-scm.com/
+
+https://medium.com/@patrickporto/4-branching-workflows-for-git-30d0aaee7bf
+
+https://medium.com/@muneebsajjad/git-flow-explained-quick-and-simple-7a753313572f
+
+
+
